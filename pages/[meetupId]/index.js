@@ -1,41 +1,56 @@
+import Head from "next/head";
 import { MongoClient, ObjectId } from "mongodb";
 
 import MeetupDetail from "../../components/meetups/MeetupDetail";
 
 const MeetupDetails = (props) => {
     return (
-        <MeetupDetail {...props.meetupData} />
+        <>
+            <Head>
+                <title>{props.meetupData.title}</title>
+                <meta
+                    name="description"
+                    content={props.meetupData.description}
+                />
+            </Head>
+            <MeetupDetail {...props.meetupData} />
+        </>
     );
 };
 
 export async function getStaticPaths() {
-
-    const client = await MongoClient.connect(`mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.ztlanls.mongodb.net/meetups?retryWrites=true&w=majority`);
+    const client = await MongoClient.connect(
+        `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.ztlanls.mongodb.net/meetups?retryWrites=true&w=majority`
+    );
     const db = client.db();
 
-    const meetupsCollection = db.collection('meetups');
+    const meetupsCollection = db.collection("meetups");
 
-    const meetups = await meetupsCollection.find({}, {_id: 1}).toArray();
+    const meetups = await meetupsCollection.find({}, { _id: 1 }).toArray();
 
     client.close();
 
     return {
         fallback: false,
-        paths: meetups.map(meetup => ({
-            params: {meetupId: meetup._id.toString()}
-        }))
-    }
+        paths: meetups.map((meetup) => ({
+            params: { meetupId: meetup._id.toString() },
+        })),
+    };
 }
 
 export async function getStaticProps(context) {
     const meetupId = context.params.meetupId;
 
-    const client = await MongoClient.connect(`mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.ztlanls.mongodb.net/meetups?retryWrites=true&w=majority`);
+    const client = await MongoClient.connect(
+        `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.ztlanls.mongodb.net/meetups?retryWrites=true&w=majority`
+    );
     const db = client.db();
 
-    const meetupsCollection = db.collection('meetups');
+    const meetupsCollection = db.collection("meetups");
 
-    const selectedMeetup = await meetupsCollection.findOne({_id: new ObjectId(meetupId)});
+    const selectedMeetup = await meetupsCollection.findOne({
+        _id: new ObjectId(meetupId),
+    });
 
     client.close();
 
@@ -46,10 +61,10 @@ export async function getStaticProps(context) {
                 title: selectedMeetup.title,
                 address: selectedMeetup.address,
                 image: selectedMeetup.image,
-                description: selectedMeetup.description
+                description: selectedMeetup.description,
             },
         },
-        revalidate: 1
+        revalidate: 1,
     };
 }
 
