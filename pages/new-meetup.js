@@ -7,7 +7,7 @@ const MewMeetupPage = () => {
     const router = useRouter();
 
     async function addMeetupHandler(enteresMeetupData) {
-        const response = await fetch("https://meetup.homeapp.pp.ua/api/new-meetup", {
+        const response = await fetch("/api/new-meetup", {
             method: "POST",
             body: JSON.stringify(enteresMeetupData),
             headers: {
