@@ -2,9 +2,9 @@ name: CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 env:
   REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
 
