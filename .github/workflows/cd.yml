@@ -22,6 +22,9 @@ jobs:
           node-version: 16
       - run: npm install --save-dev
       - run: npm run build
+        env:
+          MONGODB_USER: ${{ secrets.MONGODB_USER }}
+          MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
       - name: Deploy to Server
         uses: easingthemes/ssh-deploy@main
         env:
