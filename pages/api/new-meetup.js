@@ -17,7 +17,7 @@ async function handler(req, res) {
 
         res.status(201).json({message: 'Meetup inserted!'});
 
-        console.log(data);
+        console.log(req);
     }
 }
 
